@@ -252,6 +252,8 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(false);
     };
+
+    const [addedToCart, setAddedToCart] = useState({});
     return (
         <div>
             <div className="navbar" style={styleObj}>
