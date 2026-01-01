@@ -7,6 +7,10 @@ import { addItem } from "./CartSlice";
 
 function ProductList({ onHomeClick }) {
 
+const state = useSelector((s) => s);
+
+console.log("STATE KEYS:", Object.keys(state));
+console.log("STATE JSON:", JSON.stringify(state, null, 2));   
 // cart icon total #
 
 //const cartItems = useSelector((state) => state.cart.items);
@@ -15,7 +19,9 @@ function ProductList({ onHomeClick }) {
     // disable button
  
 const dispatch = useDispatch();
-const cartItems = useSelector((state) => state.cart?.items ?? []);
+//const cartItems = useSelector((state) => state.cart?.items ?? []);
+const cartItems = useSelector((state) => state.cart?.CartItems ?? []);
+
 const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
 const isInCart = (name) => cartItems.some((i) => i.name === name);
@@ -370,6 +376,9 @@ const handleAddToCart = (product) => {
             )}
         </div>
     );
+
+
+    
 }
 
 export default ProductList; 
