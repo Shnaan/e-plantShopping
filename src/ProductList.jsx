@@ -9,13 +9,13 @@ function ProductList({ onHomeClick }) {
 
 // cart icon total #
 
-const cartItems = useSelector((state) => state.cart.items);
+//const cartItems = useSelector((state) => state.cart.items);
 
 
     // disable button
  
 const dispatch = useDispatch();
-//const cartItems = useSelector((state) => state.cart?.items ?? []);
+const cartItems = useSelector((state) => state.cart?.items ?? []);
 const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
 const isInCart = (name) => cartItems.some((i) => i.name === name);
