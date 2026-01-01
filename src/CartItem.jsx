@@ -4,6 +4,7 @@ import { removeItem, updateQuantity } from "./CartSlice";
 import "./CartItem.css";
 
 const CartItem = ({ onContinueShopping }) => {
+  
   // ✅ FIX 1: selector path (adjust if your slice uses CartItems)
   const cart = useSelector((state) => state.cart.CartItems);
   const dispatch = useDispatch();

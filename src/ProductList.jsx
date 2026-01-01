@@ -1,12 +1,40 @@
 import React, { useState } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "./CartSlice";
 
-import { useDispatch } from "react-redux";
-import { addItem } from "./CartSlice"; // <-- named import, NOT default
 
 function ProductList({ onHomeClick }) {
-  const dispatch = useDispatch(); // <-- this was missing
+
+// cart icon total #
+
+const cartItems = useSelector((state) => state.cart.items);
+
+
+    // disable button
+ 
+const dispatch = useDispatch();
+//const cartItems = useSelector((state) => state.cart?.items ?? []);
+const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+const isInCart = (name) => cartItems.some((i) => i.name === name);
+
+
+
+const handleAddToCart = (product) => {
+    dispatch(addItem(product)); // now dispatch exists + action imported correctly
+
+    setAddedToCart((prev) => ({
+      ...prev,
+      [product.name]: true,
+    }));
+  };
+
+
+// ...
+  // SAFE: if state.cart or items is missing, use []
+
 
   const [showCart, setShowCart] = useState(false);
   const [addedToCart, setAddedToCart] = useState({});
@@ -260,14 +288,7 @@ function ProductList({ onHomeClick }) {
         setShowCart(false);
     };
 
-    const handleAddToCart = (product) => {
-    dispatch(addItem(product)); // now dispatch exists + action imported correctly
-
-    setAddedToCart((prev) => ({
-      ...prev,
-      [product.name]: true,
-    }));
-  };
+    
 
     
     return (
@@ -287,7 +308,23 @@ function ProductList({ onHomeClick }) {
                 </div>
                 <div style={styleObjUl}>
                     <div> <a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>Plants</a></div>
-                    <div> <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
+                    <div> 
+                       <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
+  <div className="cart-icon-wrapper">
+    {/* your SVG icon */}
+    <h1 className="cart">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"></svg>
+    </h1>
+
+    {totalQty > 0 && <span className="cart-badge">{totalQty}</span>}
+
+    <span className="cart-badge">{totalQty}</span>
+  </div>
+</a>
+
+
+
+                    </div>
                 </div>
             </div>
             {!showCart ? (
@@ -310,11 +347,17 @@ function ProductList({ onHomeClick }) {
           <div className="product-description">{plant.description}</div> {/* Display plant description */}
           <div className="product-cost">${plant.cost}</div> {/* Display plant cost */}
           <button
-            className="product-button"
-            onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
-          >
-            Add to Cart
-          </button>
+  className="product-button"
+  onClick={() => handleAddToCart(plant)}
+  disabled={isInCart(plant.name)}
+  style={{
+    opacity: isInCart(plant.name) ? 0.5 : 1,
+    cursor: isInCart(plant.name) ? "not-allowed" : "pointer",
+  }}
+>
+  {isInCart(plant.name) ? "Added to Cart" : "Add to Cart"}
+</button>
+
         </div>
       ))}
     </div>
