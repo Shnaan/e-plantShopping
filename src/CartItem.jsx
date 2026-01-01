@@ -89,7 +89,7 @@ const CartItem = ({ onContinueShopping }) => {
           Continue Shopping
         </button>
         <br />
-        <button className="get-started-button1" onClick={() => alert("Checkout later")}>
+        <button className="get-started-button1" onClick={() => alert("Functionality to be added for future referenceout later")}>
           Checkout
         </button>
       </div>
